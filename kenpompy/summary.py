@@ -7,91 +7,119 @@ import mechanicalsoup
 import pandas as pd
 import re
 from bs4 import BeautifulSoup
+import pathlib 
 
-def name_clean_up(dataframe, season=None):
+def name_clean_up(dataframe, year=None):
 	for index in dataframe.index:
 		#team_name = dataframe.loc[index,'Team']
 		
 		iter_team = dataframe.loc[index,'Team']
 		iter_conf = dataframe.loc[index,'Conference']
+		#print(f"team: {iter_team}")
+		try:
+			if dataframe.loc[index,'Team'][-3:] == "St.":
+				dataframe.loc[index,'Team'] = dataframe.loc[index,'Team'][:-1] + "ate"
 
-		if dataframe.loc[index,'Team'][-3:] == "St.":
-			dataframe.loc[index,'Team'] = dataframe.loc[index,'Team'][:-1] + "ate"
+			if iter_team == 'Miami OH' and iter_conf == 'MAC':	
+				dataframe.loc[index,'Team'] = 'Miami (OH)'
+			if iter_team == "Miami FL" and iter_conf == 'ACC':	
+				dataframe.loc[index,'Team'] = "Miami (FL)"
+			if iter_team == "St. Francis PA" and iter_conf == 'NEC':	
+				dataframe.loc[index,'Team'] = "St. Francis (PA)"
+			if iter_team == "Bryant" and iter_conf == 'NEC':	
+				dataframe.loc[index,'Team'] = "Bryant University"
+			if iter_team == "Southern" and iter_conf == "SWAC":	
+				dataframe.loc[index,'Team'] = "Southern University"
+			if iter_team == "Bethune Cookman" and iter_conf == 'MEAC':	
+				dataframe.loc[index,'Team'] = "Bethune-Cookman"
+			if iter_team == "Cal Baptist" and iter_conf == 'WAC':	
+				dataframe.loc[index,'Team'] = "California Baptist"	
+			if iter_team == "The Citadel" and iter_conf == 'SC':
+				dataframe.loc[index,'Team'] = "Citadel"	
+			if iter_team == "Texas A&M Corpus Chris" and iter_conf == 'Slnd':
+			 	dataframe.loc[index,'Team'] = "Texas A&M-CC"	
+			if iter_team == "Central Connecticut" and iter_conf == 'NEC':
+			 	dataframe.loc[index,'Team'] = "Central Connecticut State"
+			if iter_team == "Loyola MD" and iter_conf == 'Pat':
+			 	dataframe.loc[index,'Team'] = "Loyola (MD)"
+			if iter_team == "Cal St. Bakersfield" and iter_conf == 'WAC':	
+				dataframe.loc[index,'Team'] = "Cal State Bakersfield"
+			if iter_team == "LIU" and iter_conf == 'NEC':	
+				dataframe.loc[index,'Team'] = "LIU Brooklyn"
+			if iter_team == "NJIT" and iter_conf == 'ASun':	
+				dataframe.loc[index,'Team'] = "N.J.I.T."
+			if iter_team == "Maryland Eastern Shore" and iter_conf == 'MEAC':	
+				dataframe.loc[index,'Team'] = "Maryland-Eastern Shore"
+			if iter_team == "St. Francis NY" and iter_conf == 'NEC':	
+				dataframe.loc[index,'Team'] = "St. Francis (BKN)"		
+			if iter_team == "Louisiana Monroe":	
+				dataframe.loc[index,'Team'] = "Louisiana-Monroe"
+			if iter_team == "Saint Peter's" and iter_conf == 'MAAC':	
+				dataframe.loc[index,'Team'] = "St. Peter's"			
+			if iter_team == "Saint Joseph's" and iter_conf == 'A10':	
+				dataframe.loc[index,'Team'] = "Saint Joseph's (PA)"
+			if iter_team == "Illinois Chicago":	
+				dataframe.loc[index,'Team'] = "Illinois-Chicago"
+			if iter_team == "Gardner Webb":	
+				dataframe.loc[index,'Team'] = "Gardner-Webb"
+			if iter_team == "Nicholls St.":	
+				dataframe.loc[index,'Team'] = "Nicholls State"
+			if iter_team == "Cal St. Northridge":	
+				dataframe.loc[index,'Team'] = "Cal State Northridge"
+			if iter_team == "UNC Wilmington":	
+				dataframe.loc[index,'Team'] = "North Carolina-Wilmington"
+			if iter_team == 'Mississippi':	
+				dataframe.loc[index,'Team'] = 'Ole Miss'
+			if iter_team == 'Tennessee Martin':	
+				dataframe.loc[index,'Team'] = 'Tennessee-Martin'
+			if iter_team == 'SIU Edwardsville':	
+				dataframe.loc[index,'Team'] = 'SIU-Edwardsville'
+			if iter_team == 'Montana St.':	
+				dataframe.loc[index,'Team'] = 'Montana State'
+			if iter_team == 'Nebraska Omaha':	
+				dataframe.loc[index,'Team'] = 'Nebraska-Omaha'
+			if iter_team == "Arkansas Pine Bluff":	
+				dataframe.loc[index,'Team'] = "Arkansas-Pine Bluff"
+			if iter_team == "Cal St. Fullerton":	
+				dataframe.loc[index,'Team'] = "Cal State Fullerton"
+			# if iter_team == "North Carolina State" and iter_conf == "ACC":
+			# 	dataframe.loc[index,'Team'] = "North Carolina"
 
-		if iter_team == 'Miami OH' and iter_conf == 'MAC':	
-			dataframe.loc[index,'Team'] = 'Miami (OH)'
-		if iter_team == "Miami FL" and iter_conf == 'ACC':	
-			dataframe.loc[index,'Team'] = "Miami (FL)"
-		if iter_team == "St. Francis PA" and iter_conf == 'NEC':	
-			dataframe.loc[index,'Team'] = "St. Francis (PA)"
-		if iter_team == "Bryant" and iter_conf == 'NEC':	
-			dataframe.loc[index,'Team'] = "Bryant University"
-		if iter_team == "Southern" and iter_conf == "SWAC":	
-			dataframe.loc[index,'Team'] = "Southern University"
-		if iter_team == "Bethune Cookman" and iter_conf == 'MEAC':	
-			dataframe.loc[index,'Team'] = "Bethune-Cookman"
-		if iter_team == "Cal Baptist" and iter_conf == 'WAC':	
-			dataframe.loc[index,'Team'] = "California Baptist"	
-		if iter_team == "The Citadel" and iter_conf == 'SC':
-			dataframe.loc[index,'Team'] = "Citadel"	
-		if iter_team == "Texas A&M Corpus Chris" and iter_conf == 'Slnd':
-		 	dataframe.loc[index,'Team'] = "Texas A&M-CC"	
-		if iter_team == "Central Connecticut" and iter_conf == 'NEC':
-		 	dataframe.loc[index,'Team'] = "Central Connecticut State"
-		if iter_team == "Loyola MD" and iter_conf == 'Pat':
-		 	dataframe.loc[index,'Team'] = "Loyola (MD)"
-		if iter_team == "Cal St. Bakersfield" and iter_conf == 'WAC':	
-			dataframe.loc[index,'Team'] = "Cal State Bakersfield"
-		if iter_team == "LIU" and iter_conf == 'NEC':	
-			dataframe.loc[index,'Team'] = "LIU Brooklyn"
-		if iter_team == "NJIT" and iter_conf == 'ASun':	
-			dataframe.loc[index,'Team'] = "N.J.I.T."
-		if iter_team == "Maryland Eastern Shore" and iter_conf == 'MEAC':	
-			dataframe.loc[index,'Team'] = "Maryland-Eastern Shore"
-		if iter_team == "St. Francis NY" and iter_conf == 'NEC':	
-			dataframe.loc[index,'Team'] = "St. Francis (BKN)"		
-		if iter_team == "Louisiana Monroe":	
-			dataframe.loc[index,'Team'] = "Louisiana-Monroe"
-		if iter_team == "Saint Peter's" and iter_conf == 'MAAC':	
-			dataframe.loc[index,'Team'] = "St. Peter's"			
-		if iter_team == "Saint Joseph's" and iter_conf == 'A10':	
-			dataframe.loc[index,'Team'] = "Saint Joseph's (PA)"
-		if iter_team == "Illinois Chicago":	
-			dataframe.loc[index,'Team'] = "Illinois-Chicago"
-		if iter_team == "Gardner Webb":	
-			dataframe.loc[index,'Team'] = "Gardner-Webb"
-		if iter_team == "Nicholls St.":	
-			dataframe.loc[index,'Team'] = "Nicholls State"
-		if iter_team == "Cal St. Northridge":	
-			dataframe.loc[index,'Team'] = "Cal State Northridge"
-		if iter_team == "UNC Wilmington":	
-			dataframe.loc[index,'Team'] = "North Carolina-Wilmington"
-		if iter_team == 'Mississippi':	
-			dataframe.loc[index,'Team'] = 'Ole Miss'
-		if iter_team == 'Tennessee Martin':	
-			dataframe.loc[index,'Team'] = 'Tennessee-Martin'
-		if iter_team == 'SIU Edwardsville':	
-			dataframe.loc[index,'Team'] = 'SIU-Edwardsville'
-		if iter_team == 'Montana St.':	
-			dataframe.loc[index,'Team'] = 'Montana State'
-		if iter_team == 'Nebraska Omaha':	
-			dataframe.loc[index,'Team'] = 'Nebraska-Omaha'
-		if iter_team == "Arkansas Pine Bluff":	
-			dataframe.loc[index,'Team'] = "Arkansas-Pine Bluff"
-		if iter_team == "Cal St. Fullerton":	
-			dataframe.loc[index,'Team'] = "Cal State Fullerton"
-		# if iter_team == "North Carolina State" and iter_conf == "ACC":
-		# 	dataframe.loc[index,'Team'] = "North Carolina"
+			if iter_team == "College of Charleston" and iter_conf == "CAA": # for years < 2019
+				dataframe.loc[index,'Team'] = "Charleston"
 
-		if iter_team == "College of Charleston" and iter_conf == "CAA": # for years < 2019
-			dataframe.loc[index,'Team'] = "Charleston"
-
-		if iter_team == "NJIT" and ((season == 2014) or (season==2015)) and iter_conf == "ind": 
-			print('changed it')
-			dataframe.loc[index,'Team'] = "N.J.I.T."
-
+			if iter_team == "NJIT" and ((year == 2014) or (year==2015)) and iter_conf == "ind": 
+				dataframe.loc[index,'Team'] = "N.J.I.T."
+		except TypeError:
+			pass
 
 	return dataframe
+
+
+
+def are_teams_unique(dataframe, tag_string=None):
+	test_list = dataframe['Team'].tolist()
+
+	all_unique = len(set(test_list)) == len(test_list) 
+
+	seen = set()
+	uniq = [x for x in test_list if x not in seen and not seen.add(x)]   
+	seen = {}
+	dupes = []
+
+	for x in test_list:
+		if x not in seen:
+			seen[x] = 1
+		else:
+			if seen[x] == 1:
+				dupes.append(x)
+			seen[x] += 1
+	print(f"{tag_string} duplicates: {dupes}")
+
+	if len(dupes) == 0:
+		return True
+	else:
+		return False
 
 
 
@@ -128,6 +156,13 @@ def get_efficiency(browser, season=None):
 	# Dataframe tidying.
 	eff_df = eff_df[0]
 
+	#print(eff_df)
+
+	tmp_df_names = eff_df.iloc[:,0].str.replace('\d+', '').str.rstrip() # these don't have astricks? 
+	tmp_df_ranks =  eff_df.iloc[:,0].str.extract(r"(\d+)") 
+
+	tmp_df_names = tmp_df_names.rename("Team")
+
 	# Handle seasons prior to 2010 having fewer columns.
 	if len(eff_df.columns) == 18:
 		eff_df = eff_df.iloc[:, 0:18]
@@ -145,12 +180,29 @@ def get_efficiency(browser, season=None):
 
 	# Remove the header rows that are interjected for readability.
 	eff_df = eff_df[eff_df.Team != 'Team']
-	# Remove NCAA tourny seeds for previous seasons.
-	eff_df['Team'] = eff_df['Team'].str.replace('\d+', '')
-	eff_df['Team'] = eff_df['Team'].str.rstrip()
-	eff_df = eff_df.dropna()
 
-	eff_df = name_clean_up(eff_df, season)
+	# Remove NCAA tourny seeds for previous seasons.
+	#eff_df['Team'] = eff_df['Team'].str.replace('\d+', '')
+	#eff_df['Team'] = eff_df['Team'].str.rstrip()
+	#eff_df = eff_df.dropna()
+
+	eff_df["Team"] = tmp_df_names
+	eff_df["Seed"] = tmp_df_ranks
+	
+	#df = eff_df[eff_df.Team != 'Team']
+	#df = df.drop(df[df['Team']==0].index).dropna()
+
+	if are_teams_unique(dataframe=eff_df, tag_string="kenpom.com/summary"): 
+		update_df = name_clean_up(dataframe=eff_df, year=season)
+		print('LINE 195')
+		print(update_df)
+		print('-------------------------------------------------------')
+		return update_df
+	else:
+		update_df = name_clean_up(dataframe=eff_df, year=season)
+
+		return	update_df
+	#eff_df = name_clean_up(eff_df, season)
 
 	return eff_df
 
@@ -185,6 +237,10 @@ def get_fourfactors(browser, season=None):
 	table = ff.find_all('table')[0]
 	ff_df = pd.read_html(str(table))
 
+	tmp_df_names = ff_df[0].iloc[:,0].str.replace('\d+', '').str.rstrip() # these don't have astricks? 
+	tmp_df_ranks =  ff_df[0].iloc[:,0].str.extract(r"(\d+)") 
+	tmp_df_names = tmp_df_names.rename("Team")
+
 	# Dataframe tidying.
 	ff_df = ff_df[0]
 	ff_df = ff_df.iloc[:, 0:24]
@@ -199,6 +255,16 @@ def get_fourfactors(browser, season=None):
 	ff_df['Team'] = ff_df['Team'].str.replace('\d+', '')
 	ff_df['Team'] = ff_df['Team'].str.rstrip()
 	ff_df = ff_df.dropna()
+
+	ff_df["Team"] = tmp_df_names
+	ff_df["Seed"] = tmp_df_ranks
+	
+	df = ff_df[ff_df.Team != 'Team']
+	df = df.drop(df[df['Team']==0].index).dropna()
+	if are_teams_unique(dataframe=df, tag_string="kenpom.com/stats"): 
+		update_df = name_clean_up(dataframe=df, year=season)
+	else:
+		return	
 
 	ff_df = name_clean_up(ff_df, season)
 
@@ -245,6 +311,10 @@ def get_teamstats(browser, defense=False, season=None):
 	table = ts.find_all('table')[0]
 	ts_df = pd.read_html(str(table))
 
+	tmp_df_names = ts_df[0].iloc[:,0].str.replace('\d+', '').str.rstrip() # these don't have astricks? 
+	tmp_df_ranks =  ts_df[0].iloc[:,0].str.extract(r"(\d+)") 
+	tmp_df_names = tmp_df_names.rename("Team")
+
 	# Dataframe tidying.
 	ts_df = ts_df[0]
 	# ts_df = ts_df.iloc[:, 0:18]
@@ -263,6 +333,20 @@ def get_teamstats(browser, defense=False, season=None):
 	ts_df['Team'] = ts_df['Team'].str.replace('\d+', '')
 	ts_df['Team'] = ts_df['Team'].str.rstrip()
 	ts_df = ts_df.dropna()
+
+	ts_df["Team"] = tmp_df_names
+	ts_df["Seed"] = tmp_df_ranks
+	
+	df = ts_df[ts_df.Team != 'Team']
+	df = df.drop(df[df['Team']==0].index).dropna()
+	if defense:
+		kp_url = "kenpom.com/teamstats/Defense"
+	else:
+		kp_url = "kenpom.com/teamstats/Offense"
+	if are_teams_unique(dataframe=df, tag_string=kp_url): 
+		update_df = name_clean_up(dataframe=df, year=season)
+	else:
+		return	
 
 	ts_df = name_clean_up(ts_df, season)
 
@@ -300,6 +384,10 @@ def get_pointdist(browser, season=None):
 	table = dist.find_all('table')[0]
 	dist_df = pd.read_html(str(table))
 
+	tmp_df_names = dist_df[0].iloc[:,0].str.replace('\d+', '').str.rstrip() # these don't have astricks? 
+	tmp_df_ranks =  dist_df[0].iloc[:,0].str.extract(r"(\d+)") 
+	tmp_df_names = tmp_df_names.rename("Team")
+
 	# Dataframe tidying.
 	dist_df = dist_df[0]
 	dist_df = dist_df.iloc[:, 0:14]
@@ -312,6 +400,17 @@ def get_pointdist(browser, season=None):
 	dist_df['Team'] = dist_df['Team'].str.replace('\d+', '')
 	dist_df['Team'] = dist_df['Team'].str.rstrip()
 	dist_df = dist_df.dropna()
+
+	dist_df["Team"] = tmp_df_names
+	dist_df["Seed"] = tmp_df_ranks
+	
+	df = dist_df[dist_df.Team != 'Team']
+	df = df.drop(df[df['Team']==0].index).dropna()
+
+	if are_teams_unique(dataframe=df, tag_string="kenpom.com/pointdist"): 
+		update_df = name_clean_up(dataframe=df, year=season)
+	else:
+		return	
 
 	dist_df = name_clean_up(dist_df, season)
 
@@ -348,6 +447,11 @@ def get_height(browser, season=None):
 	table = height.find_all('table')[0]
 	h_df = pd.read_html(str(table))
 
+	tmp_df_names = h_df[0].iloc[:,0].str.replace('\d+', '').str.rstrip() # these don't have astricks? 
+	tmp_df_ranks =  h_df[0].iloc[:,0].str.extract(r"(\d+)") 
+	tmp_df_names = tmp_df_names.rename("Team")
+
+
 	# Dataframe tidying.
 	h_df = h_df[0]
 
@@ -371,6 +475,17 @@ def get_height(browser, season=None):
 	h_df['Team'] = h_df['Team'].str.replace('\d+', '')
 	h_df['Team'] = h_df['Team'].str.rstrip()
 	h_df = h_df.dropna()
+
+	h_df["Team"] = tmp_df_names
+	h_df["Seed"] = tmp_df_ranks
+	
+	df = h_df[h_df.Team != 'Team']
+	df = df.drop(df[df['Team']==0].index).dropna()
+
+	if are_teams_unique(dataframe=df, tag_string="kenpom.com/height"): 
+		update_df = name_clean_up(dataframe=df, year=season)
+	else:
+		return
 
 	h_df = name_clean_up(h_df, season)
 
