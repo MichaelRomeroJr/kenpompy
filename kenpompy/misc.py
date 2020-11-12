@@ -90,103 +90,29 @@ def pom_rating_name_clean_up(dataframe, year=None):
 				dataframe.loc[index,'Team'] = "Cal State Fullerton"
 			if iter_team == "Arkansas Pine Bluff" and iter_conf == "SWAC":
 				dataframe.loc[index,'Team'] = "Arkansas-Pine Bluff"
-			if iter_team == "College of Charleston" and iter_conf == "CAA": # for years < 2019
+			if iter_team == "College of Charleston":
 				dataframe.loc[index,'Team'] = "Charleston"
-
-		except:
-			pass
-		pass
-	return dataframe
-
-
-def name_clean_up(dataframe, year=None):
-	for index in dataframe.index:
-		iter_team = dataframe.loc[index,'Team']
-		iter_conf = dataframe.loc[index,'Conf']
-
-		try:
-			if iter_team[-3:] == "St.":
-				dataframe.loc[index,'Team'] = dataframe.loc[index,'Team'][:-1] + "ate"
-				
-			if iter_team == 'Miami OH':	
-				dataframe.loc[index,'Team'] = 'Miami (OH)'
-			if iter_team == "Miami FL":	
-				dataframe.loc[index,'Team'] = "Miami (FL)"
-			if iter_team == "St. Francis PA":	
-				dataframe.loc[index,'Team'] = "St. Francis (PA)"
-			if iter_team == "Bryant":	
-				dataframe.loc[index,'Team'] = "Bryant University"
-			if iter_team == "Southern":	
-				dataframe.loc[index,'Team'] = "Southern University"
-			if iter_team == "Bethune Cookman":	
-				dataframe.loc[index,'Team'] = "Bethune-Cookman"
-			if iter_team == "Cal Baptist":	
-				dataframe.loc[index,'Team'] = "California Baptist"	
-			if iter_team == "The Citadel":
-				dataframe.loc[index,'Team'] = "Citadel"	
-			if iter_team == "Central Connecticut":
-				dataframe.loc[index,'Team'] = "Central Connecticut State"
-			if iter_team == "Loyola MD":
-				dataframe.loc[index,'Team'] = "Loyola (MD)"
-			if iter_team == "Cal St. Bakersfield":	
-				dataframe.loc[index,'Team'] = "Cal State Bakersfield"
-			if iter_team == "LIU":	
-				dataframe.loc[index,'Team'] = "LIU Brooklyn"
-			if iter_team == "NJIT":	
+	
+			# 11/11 Update
+			if 	iter_team == "Fort Wayne" or iter_team == "IPFW":
+				dataframe.loc[index,'Team'] = "Purdue Fort Wayne"	
+			if 	iter_team == "Arkansas Little Rock":
+				dataframe.loc[index,'Team'] = "Little Rock"		
+			if 	iter_team == "Texas Pan American":
+				dataframe.loc[index,'Team'] = "UT Rio Grande Valley"
+			if iter_team == "Louisiana Lafayette":
+			  	dataframe.loc[index,'Team'] = "Louisiana"
+			if iter_team == "College of Charleston":
+				dataframe.loc[index,'Team'] = "Charleston"
+			if iter_team == "NJIT": 
 				dataframe.loc[index,'Team'] = "N.J.I.T."
-			if iter_team == "Louisiana Monroe":	
-				dataframe.loc[index,'Team'] = "Louisiana-Monroe"
-			if iter_team == "Illinois Chicago":	
-				dataframe.loc[index,'Team'] = "Illinois-Chicago"
-			if iter_team == "Gardner Webb":	
-				dataframe.loc[index,'Team'] = "Gardner-Webb"
-			if iter_team == "Nicholls St.":	
-				dataframe.loc[index,'Team'] = "Nicholls State"
-			if iter_team == "Cal St. Northridge":	
-				dataframe.loc[index,'Team'] = "Cal State Northridge"
-			if iter_team == "UNC Wilmington":	
-				dataframe.loc[index,'Team'] = "North Carolina-Wilmington"
-			if iter_team == 'Mississippi':	
-				dataframe.loc[index,'Team'] = 'Ole Miss'
-			if iter_team == 'Tennessee Martin':	
-				dataframe.loc[index,'Team'] = 'Tennessee-Martin'
-			if iter_team == 'SIU Edwardsville':	
-				dataframe.loc[index,'Team'] = 'SIU-Edwardsville'
-			if iter_team == 'Montana St.':	
-				dataframe.loc[index,'Team'] = 'Montana State'
-			if iter_team == 'Nebraska Omaha':	
-				dataframe.loc[index,'Team'] = 'Nebraska-Omaha'
-			if iter_team == "Long Beach":
-				dataframe.loc[index,'Team'] = "Long Beach State"	
-
-			# Changes unique dataframe values of kenpom.com/index 
-			if iter_team == "Saint Mary" and iter_conf == "WCC":
-				dataframe.loc[index,'Team'] = "Saint Mary's"
-			if iter_team == "North Carolina Central " and iter_conf == "MEAC":
-				dataframe.loc[index,'Team'] = "North Carolina Central"
-			if iter_team == "Boston University " and iter_conf == "Pat":
-				dataframe.loc[index,'Team'] = "Boston University"
-			if iter_team == "Texas A&M Corpus Chris" and iter_conf == "Slnd":
-				dataframe.loc[index,'Team'] = "Texas A&M-CC"
-			if iter_team == "Maryland Eastern Shore" and iter_conf == "MEAC":
-				dataframe.loc[index,'Team'] = "Maryland-Eastern Shore"
-			if iter_team == "St. Francis NY" and iter_conf == "NEC": 	
-				dataframe.loc[index,'Team'] = "St. Francis (BKN)"
-			if iter_team == "Saint Joseph's" and iter_conf == "A10": 	
-				dataframe.loc[index,'Team'] = "Saint Joseph's (PA)"
-			if iter_team == "Saint Peter's" and iter_conf == "MAAC": 	
-				dataframe.loc[index,'Team'] = "St. Peter's"
-			if iter_team == "Cal St. Fullerton" and iter_conf == "BW": 	
-				dataframe.loc[index,'Team'] = "Cal State Fullerton"
-			if iter_team == "Arkansas Pine Bluff" and iter_conf == "SWAC":
-				dataframe.loc[index,'Team'] = "Arkansas-Pine Bluff"
-			if iter_team == "College of Charleston" and iter_conf == "CAA": # for years < 2019
-				dataframe.loc[index,'Team'] = "Charleston"
-
 		except:
 			pass
 		pass
 	return dataframe
+
+
+
 
 
 def are_teams_unique(dataframe):
@@ -240,9 +166,12 @@ def get_pomeroy_ratings(browser, season=None):
 	#print(ratings_df)
 
 	#print(ratings_df[0].droplevel(list(range(0, 17, 2)), axis=1).columns.tolist())
-	tmp_df_names = ratings_df[0].iloc[:,1].str.replace('\d+\*+', '').str.rstrip() 
-	tmp_df_ranks =  ratings_df[0].iloc[:,1].str.extract(r"(\d+)") 
+	if season==2020: # has astrick in column 
+		tmp_df_names = ratings_df[0].iloc[:,1].str.replace('\d+\*+', '').str.rstrip() 	 
+	else:
+		tmp_df_names = ratings_df[0].iloc[:,1].str.replace('\d+', '').str.rstrip() 
 
+	tmp_df_ranks =  ratings_df[0].iloc[:,1].str.extract(r"(\d+)")
 	tmp_df_names = tmp_df_names.rename("Team")
 	#print(tmp_df_names)
 
@@ -306,7 +235,7 @@ def get_pomeroy_ratings(browser, season=None):
 	#ratings_df = pom_rating_name_clean_up(ratings_df, year=season)
 	else: # the non-unique ones are the column headers  
 		update_df = pom_rating_name_clean_up(dataframe=ratings_df, year=season)
-		 
+	
 	return update_df #ratings_df
 
 
@@ -620,6 +549,19 @@ def df_name_clean(dataframe):
 			if iter_team == "College of Charleston" and iter_conf == "CAA": # for years < 2019
 				dataframe.loc[index,'Team'] = "Charleston"
 
+			if 	iter_team == "Fort Wayne" or iter_team == "IPFW":
+				dataframe.loc[index,'Team'] = "Purdue Fort Wayne"	
+			if 	iter_team == "Arkansas Little Rock":
+				dataframe.loc[index,'Team'] = "Little Rock"		
+			if 	iter_team == "Texas Pan American":
+				dataframe.loc[index,'Team'] = "UT Rio Grande Valley"
+			if iter_team == "Louisiana Lafayette":
+			  	dataframe.loc[index,'Team'] = "Louisiana"
+			if iter_team == "College of Charleston":
+				dataframe.loc[index,'Team'] = "Charleston"
+			if iter_team == "NJIT": 
+				dataframe.loc[index,'Team'] = "N.J.I.T."
+
 		except:
 			pass
 		pass
@@ -683,3 +625,91 @@ def get_team_df(browser, season=None):
 	#print(df)
 	return df #test_list
 
+# def name_clean_up(dataframe, year=None):
+# 	for index in dataframe.index:
+# 		iter_team = dataframe.loc[index,'Team']
+# 		iter_conf = dataframe.loc[index,'Conf']
+
+# 		try:
+# 			if iter_team[-3:] == "St.":
+# 				dataframe.loc[index,'Team'] = dataframe.loc[index,'Team'][:-1] + "ate"
+				
+# 			if iter_team == 'Miami OH':	
+# 				dataframe.loc[index,'Team'] = 'Miami (OH)'
+# 			if iter_team == "Miami FL":	
+# 				dataframe.loc[index,'Team'] = "Miami (FL)"
+# 			if iter_team == "St. Francis PA":	
+# 				dataframe.loc[index,'Team'] = "St. Francis (PA)"
+# 			if iter_team == "Bryant":	
+# 				dataframe.loc[index,'Team'] = "Bryant University"
+# 			if iter_team == "Southern":	
+# 				dataframe.loc[index,'Team'] = "Southern University"
+# 			if iter_team == "Bethune Cookman":	
+# 				dataframe.loc[index,'Team'] = "Bethune-Cookman"
+# 			if iter_team == "Cal Baptist":	
+# 				dataframe.loc[index,'Team'] = "California Baptist"	
+# 			if iter_team == "The Citadel":
+# 				dataframe.loc[index,'Team'] = "Citadel"	
+# 			if iter_team == "Central Connecticut":
+# 				dataframe.loc[index,'Team'] = "Central Connecticut State"
+# 			if iter_team == "Loyola MD":
+# 				dataframe.loc[index,'Team'] = "Loyola (MD)"
+# 			if iter_team == "Cal St. Bakersfield":	
+# 				dataframe.loc[index,'Team'] = "Cal State Bakersfield"
+# 			if iter_team == "LIU":	
+# 				dataframe.loc[index,'Team'] = "LIU Brooklyn"
+# 			if iter_team == "NJIT":	
+# 				dataframe.loc[index,'Team'] = "N.J.I.T."
+# 			if iter_team == "Louisiana Monroe":	
+# 				dataframe.loc[index,'Team'] = "Louisiana-Monroe"
+# 			if iter_team == "Illinois Chicago":	
+# 				dataframe.loc[index,'Team'] = "Illinois-Chicago"
+# 			if iter_team == "Gardner Webb":	
+# 				dataframe.loc[index,'Team'] = "Gardner-Webb"
+# 			if iter_team == "Nicholls St.":	
+# 				dataframe.loc[index,'Team'] = "Nicholls State"
+# 			if iter_team == "Cal St. Northridge":	
+# 				dataframe.loc[index,'Team'] = "Cal State Northridge"
+# 			if iter_team == "UNC Wilmington":	
+# 				dataframe.loc[index,'Team'] = "North Carolina-Wilmington"
+# 			if iter_team == 'Mississippi':	
+# 				dataframe.loc[index,'Team'] = 'Ole Miss'
+# 			if iter_team == 'Tennessee Martin':	
+# 				dataframe.loc[index,'Team'] = 'Tennessee-Martin'
+# 			if iter_team == 'SIU Edwardsville':	
+# 				dataframe.loc[index,'Team'] = 'SIU-Edwardsville'
+# 			if iter_team == 'Montana St.':	
+# 				dataframe.loc[index,'Team'] = 'Montana State'
+# 			if iter_team == 'Nebraska Omaha':	
+# 				dataframe.loc[index,'Team'] = 'Nebraska-Omaha'
+# 			if iter_team == "Long Beach":
+# 				dataframe.loc[index,'Team'] = "Long Beach State"	
+
+# 			# Changes unique dataframe values of kenpom.com/index 
+# 			if iter_team == "Saint Mary" and iter_conf == "WCC":
+# 				dataframe.loc[index,'Team'] = "Saint Mary's"
+# 			if iter_team == "North Carolina Central " and iter_conf == "MEAC":
+# 				dataframe.loc[index,'Team'] = "North Carolina Central"
+# 			if iter_team == "Boston University " and iter_conf == "Pat":
+# 				dataframe.loc[index,'Team'] = "Boston University"
+# 			if iter_team == "Texas A&M Corpus Chris" and iter_conf == "Slnd":
+# 				dataframe.loc[index,'Team'] = "Texas A&M-CC"
+# 			if iter_team == "Maryland Eastern Shore" and iter_conf == "MEAC":
+# 				dataframe.loc[index,'Team'] = "Maryland-Eastern Shore"
+# 			if iter_team == "St. Francis NY" and iter_conf == "NEC": 	
+# 				dataframe.loc[index,'Team'] = "St. Francis (BKN)"
+# 			if iter_team == "Saint Joseph's" and iter_conf == "A10": 	
+# 				dataframe.loc[index,'Team'] = "Saint Joseph's (PA)"
+# 			if iter_team == "Saint Peter's" and iter_conf == "MAAC": 	
+# 				dataframe.loc[index,'Team'] = "St. Peter's"
+# 			if iter_team == "Cal St. Fullerton" and iter_conf == "BW": 	
+# 				dataframe.loc[index,'Team'] = "Cal State Fullerton"
+# 			if iter_team == "Arkansas Pine Bluff" and iter_conf == "SWAC":
+# 				dataframe.loc[index,'Team'] = "Arkansas-Pine Bluff"
+# 			if iter_team == "College of Charleston":
+# 				dataframe.loc[index,'Team'] = "Charleston"
+
+# 		except:
+# 			pass
+# 		pass
+# 	return dataframe
