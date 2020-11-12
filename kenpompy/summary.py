@@ -40,14 +40,14 @@ def name_clean_up(dataframe, year=None):
 			 	dataframe.loc[index,'Team'] = "Texas A&M-CC"	
 			if iter_team == "Central Connecticut" and iter_conf == 'NEC':
 			 	dataframe.loc[index,'Team'] = "Central Connecticut State"
-			if iter_team == "Loyola MD" and iter_conf == 'Pat':
+			if iter_team == "Loyola MD":
 			 	dataframe.loc[index,'Team'] = "Loyola (MD)"
-			if iter_team == "Cal St. Bakersfield" and iter_conf == 'WAC':	
+			if iter_team == "Cal St. Bakersfield":	
 				dataframe.loc[index,'Team'] = "Cal State Bakersfield"
 			if iter_team == "LIU" and iter_conf == 'NEC':	
 				dataframe.loc[index,'Team'] = "LIU Brooklyn"
-			if iter_team == "NJIT" and iter_conf == 'ASun':	
-				dataframe.loc[index,'Team'] = "N.J.I.T."
+			# if iter_team == "NJIT" and iter_conf == 'ASun':	
+			# 	dataframe.loc[index,'Team'] = "N.J.I.T."
 			if iter_team == "Maryland Eastern Shore" and iter_conf == 'MEAC':	
 				dataframe.loc[index,'Team'] = "Maryland-Eastern Shore"
 			if iter_team == "St. Francis NY" and iter_conf == 'NEC':	
@@ -62,8 +62,6 @@ def name_clean_up(dataframe, year=None):
 				dataframe.loc[index,'Team'] = "Illinois-Chicago"
 			if iter_team == "Gardner Webb":	
 				dataframe.loc[index,'Team'] = "Gardner-Webb"
-			if iter_team == "Nicholls St.":	
-				dataframe.loc[index,'Team'] = "Nicholls State"
 			if iter_team == "Cal St. Northridge":	
 				dataframe.loc[index,'Team'] = "Cal State Northridge"
 			if iter_team == "UNC Wilmington":	
@@ -82,13 +80,19 @@ def name_clean_up(dataframe, year=None):
 				dataframe.loc[index,'Team'] = "Arkansas-Pine Bluff"
 			if iter_team == "Cal St. Fullerton":	
 				dataframe.loc[index,'Team'] = "Cal State Fullerton"
-			# if iter_team == "North Carolina State" and iter_conf == "ACC":
-			# 	dataframe.loc[index,'Team'] = "North Carolina"
 
-			if iter_team == "College of Charleston" and iter_conf == "CAA": # for years < 2019
+			# 11/11 Update
+			if 	iter_team == "Fort Wayne" or iter_team == "IPFW":
+				dataframe.loc[index,'Team'] = "Purdue Fort Wayne"	
+			if 	iter_team == "Arkansas Little Rock":
+				dataframe.loc[index,'Team'] = "Little Rock"		
+			if 	iter_team == "Texas Pan American":
+				dataframe.loc[index,'Team'] = "UT Rio Grande Valley"
+			if iter_team == "Louisiana Lafayette":
+			  	dataframe.loc[index,'Team'] = "Louisiana"
+			if iter_team == "College of Charleston":
 				dataframe.loc[index,'Team'] = "Charleston"
-
-			if iter_team == "NJIT" and ((year == 2014) or (year==2015)) and iter_conf == "ind": 
+			if iter_team == "NJIT": 
 				dataframe.loc[index,'Team'] = "N.J.I.T."
 		except TypeError:
 			pass
@@ -194,9 +198,6 @@ def get_efficiency(browser, season=None):
 
 	if are_teams_unique(dataframe=eff_df, tag_string="kenpom.com/summary"): 
 		update_df = name_clean_up(dataframe=eff_df, year=season)
-		print('LINE 195')
-		print(update_df)
-		print('-------------------------------------------------------')
 		return update_df
 	else:
 		update_df = name_clean_up(dataframe=eff_df, year=season)
