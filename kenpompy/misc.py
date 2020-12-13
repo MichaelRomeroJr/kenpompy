@@ -12,7 +12,7 @@ import re
 def pom_rating_name_clean_up(dataframe, year=None):
 	for index in dataframe.index:
 		iter_team = dataframe.loc[index,'Team']
-		iter_conf = dataframe.loc[index,'Conf']
+		iter_conf = dataframe.loc[index,'Conference']
 
 		try:
 			if iter_team[-3:] == "St.":
@@ -66,8 +66,8 @@ def pom_rating_name_clean_up(dataframe, year=None):
 				dataframe.loc[index,'Team'] = 'Montana State'
 			if iter_team == 'Nebraska Omaha':	
 				dataframe.loc[index,'Team'] = 'Nebraska-Omaha'
-			if iter_team == "Long Beach":
-				dataframe.loc[index,'Team'] = "Long Beach State"	
+			# if iter_team == "Long Beach":
+			# 	dataframe.loc[index,'Team'] = "Long Beach State"	
 
 			# Changes unique dataframe values of kenpom.com/index 
 			if iter_team == "Saint Mary" and iter_conf == "WCC":
@@ -101,7 +101,7 @@ def pom_rating_name_clean_up(dataframe, year=None):
 			if 	iter_team == "Texas Pan American":
 				dataframe.loc[index,'Team'] = "UT Rio Grande Valley"
 			if iter_team == "Louisiana Lafayette":
-			  	dataframe.loc[index,'Team'] = "Louisiana"
+				dataframe.loc[index,'Team'] = "Louisiana"
 			if iter_team == "College of Charleston":
 				dataframe.loc[index,'Team'] = "Charleston"
 			if iter_team == "NJIT": 
@@ -166,7 +166,9 @@ def get_pomeroy_ratings(browser, season=None):
 	#print(ratings_df)
 
 	#print(ratings_df[0].droplevel(list(range(0, 17, 2)), axis=1).columns.tolist())
-	if season==2020: # has astrick in column 
+	# if season==2020: # has astrick in column 
+	# 	tmp_df_names = ratings_df[0].iloc[:,1].str.replace('\d+\*+', '').str.rstrip() 	 
+	if season==2020 or season==2021: # has astrick in column 
 		tmp_df_names = ratings_df[0].iloc[:,1].str.replace('\d+\*+', '').str.rstrip() 	 
 	else:
 		tmp_df_names = ratings_df[0].iloc[:,1].str.replace('\d+', '').str.rstrip() 
@@ -174,7 +176,7 @@ def get_pomeroy_ratings(browser, season=None):
 	tmp_df_ranks =  ratings_df[0].iloc[:,1].str.extract(r"(\d+)")
 	tmp_df_names = tmp_df_names.rename("Team")
 	#print(tmp_df_names)
-
+	#print('line 177')
 	test_list = tmp_df_names.tolist()
 
 	all_unique = len(set(test_list)) == len(test_list) 
@@ -228,6 +230,22 @@ def get_pomeroy_ratings(browser, season=None):
 	#df = df.drop(df[df['Team']==0].index).dropna()
 
 	#if are_teams_unique(dataframe=df): 
+	#print(ratings_df)
+	
+	# # Columns will have repeated names without this clean up 
+	# ratings_df.columns = ['Rk', 'Team', 'Conf', 'W-L', 'AdjEM', 'AdjO', 
+	# 	'AdjO Rank', 'AdjD', 'AdjD Rank', 'AdjT', 'AdjT Rank', 'Luck', 'Luck Rank', 
+	# 	'SoS AdjEM', 'SoS AdjEM Rank', 'SoS OppO', 'SoS OppO Rank','SoS OppD', 'SoS OppD Rank', 
+	# 	'NCSOS AdjEM', 'NCSOS AdjEM Rank', 'Seed']
+
+	# 12/11 Clean up
+	ratings_df.columns = ['Rank', 'Team', 'Conference', 'win_loss', 'adjusted_efficiency_margin', 
+		'adjusted_offense', 'adjusted_offense_rank', 'adjusted_defense', 'adjusted_defense_rank', 
+		'adjusted_tempo', 'adjusted_tempo_rank', 'luck', 'luck_rank', 
+		'SoS_adjusted_efficiency_margin', 'SoS_adjusted_efficiency_margin_rank', 
+		'SoS_OppO', 'SoS_OppO_rank','SoS_OppD', 'SoS_OppD_rank', 
+		'NCSOS_adjusted_efficiency_margin', 'NCSOS_adjusted_efficiency_margin_rank', 'Seed']
+
 	if are_teams_unique(dataframe=ratings_df): 
 		#update_df = pom_rating_name_clean_up(dataframe=df, year=season)
 		update_df = pom_rating_name_clean_up(dataframe=ratings_df, year=season)
@@ -326,8 +344,13 @@ def get_hca(browser):
 
 	# Dataframe tidying.
 	hca_df = hca_df[0]
-	hca_df.columns = ['Team', 'Conference', 'HCA', 'HCA.Rank', 'PF', 'PF.Rank', 'Pts', 'Pts.Rank', 'NST',
-						'NST.Rank', 'Blk', 'Blk.Rank', 'Elev', 'Elev.Rank']
+	# hca_df.columns = ['Team', 'Conference', 'HCA', 'HCA.Rank', 'PF', 'PF.Rank', 'Pts', 'Pts.Rank', 'NST',
+	# 					'NST.Rank', 'Blk', 'Blk.Rank', 'Elev', 'Elev.Rank']
+
+	# 12/11 clean up
+	hca_df.columns = ['Team', 'Conference', 
+		'HCA', 'HCA_rank', 'PF', 'PF_rank', 'Pts', 'Pts_rank', 'NST',
+		'NST_rank', 'Blk', 'Blk_rank', 'Elev', 'Elev_rank']
 	hca_df = hca_df[hca_df.Team != 'Team']
 
 	return hca_df
@@ -556,7 +579,7 @@ def df_name_clean(dataframe):
 			if 	iter_team == "Texas Pan American":
 				dataframe.loc[index,'Team'] = "UT Rio Grande Valley"
 			if iter_team == "Louisiana Lafayette":
-			  	dataframe.loc[index,'Team'] = "Louisiana"
+				dataframe.loc[index,'Team'] = "Louisiana"
 			if iter_team == "College of Charleston":
 				dataframe.loc[index,'Team'] = "Charleston"
 			if iter_team == "NJIT": 
