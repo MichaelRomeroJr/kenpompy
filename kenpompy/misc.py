@@ -161,13 +161,8 @@ def get_pomeroy_ratings(browser, season=None):
 	page = browser.get_current_page()
 	table = page.find_all('table')[0]
 	
-	#print(table)
 	ratings_df = pd.read_html(str(table))
-	#print(ratings_df)
 
-	#print(ratings_df[0].droplevel(list(range(0, 17, 2)), axis=1).columns.tolist())
-	# if season==2020: # has astrick in column 
-	# 	tmp_df_names = ratings_df[0].iloc[:,1].str.replace('\d+\*+', '').str.rstrip() 	 
 	if season==2020 or season==2021: # has astrick in column 
 		tmp_df_names = ratings_df[0].iloc[:,1].str.replace('\d+\*+', '').str.rstrip() 	 
 	else:
@@ -175,11 +170,10 @@ def get_pomeroy_ratings(browser, season=None):
 
 	tmp_df_ranks =  ratings_df[0].iloc[:,1].str.extract(r"(\d+)")
 	tmp_df_names = tmp_df_names.rename("Team")
-	#print(tmp_df_names)
-	#print('line 177')
+
 	test_list = tmp_df_names.tolist()
 
-	all_unique = len(set(test_list)) == len(test_list) 
+	#all_unique = len(set(test_list)) == len(test_list) 
 
 	# Dataframe tidying.
 	ratings_df = ratings_df[0]
@@ -193,19 +187,16 @@ def get_pomeroy_ratings(browser, season=None):
 				iter_team = iter_team.replace('*', '')
 
 				# for character in iter_team: # remove rank 
-				# 	print(character)
 				# 	if character.isdigit():
 				# 		iter_team = iter_team.replace(character, '')
 
 			for character in iter_team: # remove rank 
-				#print(character)
 				if character.isdigit():
 					iter_team = iter_team.replace(character, '')
 			
 			if iter_team[-1] == ' ': # if it ends in ' '
 				iter_team = iter_team[:-1]
-			#print(f"after:  {iter_team}.")
-			#print()
+
 			ratings_df.loc[index,'Team'] = iter_team
 		except Exception as e:
 			
@@ -216,29 +207,15 @@ def get_pomeroy_ratings(browser, season=None):
 	
 	# Parse out seed, most current won't have this
 	#tmp = ratings_df['Team'].str.extract('(?P<Team>[a-zA-Z]+\s*[a-zA-Z]+\.*)\s*(?P<Seed>\d*)')
-	
-	#print('old team column: ', type(tmp["Team"]))
-	#print(tmp["Team"])
-	
-	#ratings_df["Team"] = tmp["Team"]
-	#ratings_df["Seed"] = tmp["Seed"]
+		
 	ratings_df["Team"] = tmp_df_names
 	ratings_df["Seed"] = tmp_df_ranks
 	
 	#  This method removed slices of the df 
 	#df = ratings_df[ratings_df.Team != 'Team']
 	#df = df.drop(df[df['Team']==0].index).dropna()
-
-	#if are_teams_unique(dataframe=df): 
-	#print(ratings_df)
 	
-	# # Columns will have repeated names without this clean up 
-	# ratings_df.columns = ['Rk', 'Team', 'Conf', 'W-L', 'AdjEM', 'AdjO', 
-	# 	'AdjO Rank', 'AdjD', 'AdjD Rank', 'AdjT', 'AdjT Rank', 'Luck', 'Luck Rank', 
-	# 	'SoS AdjEM', 'SoS AdjEM Rank', 'SoS OppO', 'SoS OppO Rank','SoS OppD', 'SoS OppD Rank', 
-	# 	'NCSOS AdjEM', 'NCSOS AdjEM Rank', 'Seed']
-
-	# 12/11 Clean up
+	# rename columns for database 
 	ratings_df.columns = ['Rank', 'Team', 'Conference', 'win_loss', 'adjusted_efficiency_margin', 
 		'adjusted_offense', 'adjusted_offense_rank', 'adjusted_defense', 'adjusted_defense_rank', 
 		'adjusted_tempo', 'adjusted_tempo_rank', 'luck', 'luck_rank', 
