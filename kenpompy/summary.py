@@ -160,28 +160,12 @@ def get_efficiency(browser, season=None):
 	# Dataframe tidying.
 	eff_df = eff_df[0]
 
-	#print(eff_df)
-
 	tmp_df_names = eff_df.iloc[:,0].str.replace('\d+', '').str.rstrip() # these don't have astricks? 
 	tmp_df_ranks =  eff_df.iloc[:,0].str.extract(r"(\d+)") 
 
 	tmp_df_names = tmp_df_names.rename("Team")
-
-	# # Handle seasons prior to 2010 having fewer columns.
-	# if len(eff_df.columns) == 18:
-	# 	eff_df = eff_df.iloc[:, 0:18]
-	# 	eff_df.columns = ['Team', 'Conference', 'Tempo-Adj', 'Tempo-Adj.Rank', 'Tempo-Raw', 'Tempo-Raw.Rank',
-	# 					  'Avg. Poss Length-Offense', 'Avg. Poss Length-Offense.Rank', 'Avg. Poss Length-Defense',
-	# 					  'Avg. Poss Length-Defense.Rank', 'Off. Efficiency-Adj', 'Off. Efficiency-Adj.Rank',
-	# 					  'Off. Efficiency-Raw', 'Off. Efficiency-Raw.Rank', 'Def. Efficiency-Adj',
-	# 					  'Def. Efficiency-Adj.Rank', 'Def. Efficiency-Raw', 'Def. Efficiency-Raw.Rank']
-	# else:
-	# 	eff_df = eff_df.iloc[:, 0:14]
-	# 	eff_df.columns = ['Team', 'Conference', 'Tempo-Adj', 'Tempo-Adj.Rank', 'Tempo-Raw', 'Tempo-Raw.Rank',
-	# 					  'Off. Efficiency-Adj', 'Off. Efficiency-Adj.Rank', 'Off. Efficiency-Raw',
-	# 					  'Off. Efficiency-Raw.Rank', 'Def. Efficiency-Adj', 'Def. Efficiency-Adj.Rank',
-	# 					  'Def. Efficiency-Raw', 'Def. Efficiency-Raw.Rank']
-	# 12/11 update
+	
+	# rename columns for database 
 	if len(eff_df.columns) == 18:
 		eff_df = eff_df.iloc[:, 0:18]
 		eff_df.columns = ['Team', 'Conference', 'tempo_adjusted', 'tempo_adjusted_rank', 'tempo_raw', 'tempo_raw_rank', 
@@ -264,12 +248,8 @@ def get_fourfactors(browser, season=None):
 	# Dataframe tidying.
 	ff_df = ff_df[0]
 	ff_df = ff_df.iloc[:, 0:24]
-	# ff_df.columns = ['Team', 'Conference', 'AdjTempo', 'AdjTempo.Rank', 'AdjOE', 'AdjOE.Rank', 'Off-eFG%',
-	# 				 'Off-eFG%.Rank', 'Off-TO%', 'Off-TO%.Rank', 'Off-OR%', 'Off-OR%.Rank', 'Off-FTRate',
-	# 				 'Off-FTRate.Rank', 'AdjDE', 'AdjDE.Rank', 'Def-eFG%', 'Def-eFG%.Rank', 'Def-TO%', 'Def-TO%.Rank',
-	# 				 'Def-OR%', 'Def-OR%.Rank', 'Def-FTRate', 'Def-FTRate.Rank']
 
-	# 12/11 clean up
+	# rename columns for database 
 	ff_df.columns = ['Team', 'Conference', 'adjusted_tempo', 'adjusted_tempo_rank', 
 		'adjusted_off_efficiency', 'adjusted_off_efficiency_rank', 
 		'off_effective_field_goal_percentage','off_effective_field_goal_percentage_rank', 
@@ -353,15 +333,7 @@ def get_teamstats(browser, defense=False, season=None):
 	# ts_df = ts_df.iloc[:, 0:18]
 	ts_df = ts_df.iloc[:, 0:20] # add two columns since NST% and NST%.Rank are added 
 
-	# ts_df.columns = ['Team', 'Conference', '3P%', '3P%.Rank', '2P%', '2P%.Rank', 'FT%', 'FT%.Rank',
-	# 				 'Blk%', 'Blk%.Rank', 'Stl%', 'Stl%.Rank', 'A%', 'A%.Rank', '3PA%', '3PA%.Rank',
-	# 				 last_cols[0], last_cols[1]]
-
-	# ts_df.columns = ['Team', 'Conference', '3P%', '3P%.Rank', '2P%', '2P%.Rank', 'FT%', 'FT%.Rank',
-	# 				'Blk%', 'Blk%.Rank', 'Stl%', 'Stl%.Rank', 'NST%', 'NST%.Rank','A%', 'A%.Rank', '3PA%', '3PA%.Rank',
-	# 				 last_cols[0], last_cols[1]]
-
-	# 12/11 clean up
+	# rename columns for database 
 	ts_df.columns = ['Team', 'Conference', 
 		'three_point_percentage', 'three_point_percentage_rank', 
 		'two_point_percentage', 'two_point_percentage_rank', 
@@ -438,10 +410,8 @@ def get_pointdist(browser, season=None):
 	# Dataframe tidying.
 	dist_df = dist_df[0]
 	dist_df = dist_df.iloc[:, 0:14]
-	# dist_df.columns = ['Team', 'Conference', 'Off-FT', 'Off-FT.Rank', 'Off-2P', 'Off-2P.Rank', 'Off-3P', 'Off-3P.Rank',
-	# 				   'Def-FT', 'Def-FT.Rank', 'Def-2P', 'Def-2P.Rank', 'Def-3P', 'Def-3P.Rank']
 
-	# 12/11 clean up
+	# rename columns for database 
 	dist_df.columns = ['Team', 'Conference', 
 		'off_free_throw', 'off_free_throw_rank', 'off_two_point', 'off_two_point_rank', 'off_three_point', 'off_three_point_rank', 
 		'def_free_throw', 'def_free_throw_rank', 'def_two_point', 'def_two_point_rank', 'def_three_point', 'def_three_point_rank']
@@ -508,20 +478,7 @@ def get_height(browser, season=None):
 	h_df = h_df[0]
 
 	# # Handle seasons prior to 2008 having fewer columns.
-	# if len(h_df.columns) == 22:
-	# 	h_df = h_df.iloc[:, 0:22]
-	# 	h_df.columns = ['Team', 'Conference', 'AvgHgt', 'AvgHgt.Rank', 'EffHgt', 'EffHgt.Rank',
-	# 					'C-Hgt', 'C-Hgt.Rank', 'PF-Hgt', 'PF-Hgt.Rank', 'SF-Hgt', 'SF-Hgt.Rank',
-	# 					'SG-Hgt', 'SG-Hgt.Rank', 'PG-Hgt', 'PG-Hgt.Rank', 'Experience', 'Experience.Rank',
-	# 					'Bench', 'Bench.Rank', "Continuity", "Continuity.Rank"]
-	# else:
-	# 	h_df = h_df.iloc[:, 0:20]
-	# 	h_df.columns = ['Team', 'Conference', 'AvgHgt', 'AvgHgt.Rank', 'EffHgt', 'EffHgt.Rank',
-	# 					'C-Hgt', 'C-Hgt.Rank', 'PF-Hgt', 'PF-Hgt.Rank', 'SF-Hgt', 'SF-Hgt.Rank',
-	# 					'SG-Hgt', 'SG-Hgt.Rank', 'PG-Hgt', 'PG-Hgt.Rank', 'Experience', 'Experience.Rank',
-	# 					'Bench', 'Bench.Rank']
-
-	# 12/11 clean up
+	# rename columns for database 
 	if len(h_df.columns) == 22:
 		h_df = h_df.iloc[:, 0:22]
 		h_df.columns = ['Team', 'Conference', 
